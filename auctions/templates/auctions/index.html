@@ -1,7 +1,12 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h2>Active Listings</h2>
+<h2>Active Listings</h2>
 
-    TODO
+<ul>
+    {% for listing in listings %}
+    <li>Product: {{ listing.title }} | Listed by: {{ listing.user }}</li>
+    {% endfor %}
+</ul>
+
 {% endblock %}
