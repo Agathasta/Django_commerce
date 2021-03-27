@@ -1,3 +1,7 @@
+# ana | fjfjfjfj
+# bob | wasp
+# admin | adminadmin
+
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
@@ -14,7 +18,7 @@ def index(request):
         'listings': Listing.objects.all()
     })
 
-# @login_required(login_url='/auctions/login/')
+@login_required(login_url='/login')
 def add(request):
     if request.method == 'POST':
         form = NewListing(request.POST)
