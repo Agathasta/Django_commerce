@@ -15,7 +15,7 @@ from .models import Bid, Category, Comment, Listing, User
 
 def index(request):
     return render(request, 'auctions/index.html', {
-        'listings': Listing.objects.all(),
+        'listings': Listing.objects.exclude(closed=True).all(),
     })
 
 @login_required(login_url='/login')
@@ -30,6 +30,7 @@ def add(request):
             new_listing.description = form.cleaned_data['description']
             new_listing.category = form.cleaned_data['category']
             new_listing.start_bid = form.cleaned_data['start_bid']
+            new_listing.image_url = form.cleaned_data['image_url']
             new_listing.save()
 
             return HttpResponseRedirect(reverse('index'))
@@ -47,6 +48,7 @@ def item(request, item_id):
     comments = Comment.objects.filter(listing=item_id)
 
     if request.method == 'POST':
+        # For bids sent
         if request.POST['action'] == 'Bid':
             form_bid = NewBid(request.POST)
 
@@ -66,10 +68,12 @@ def item(request, item_id):
                     new_bid.listing = item
                     new_bid.user = request.user
                     new_bid.save()
+
                     # To display highest bid in index page
                     item.current_price = form_bid.cleaned_data['bid']
                     item.save()
         
+        # For comments sent
         elif request.POST['action'] == 'Comment':
             form_comment = NewComment(request.POST)
 
@@ -80,17 +84,30 @@ def item(request, item_id):
                 new_comment.user = request.user
                 new_comment.save()
 
-        return HttpResponseRedirect(reverse('item', args=(item_id,)))
+        # For closed listing
+        elif request.POST['action'] == 'Close':
+            item.closed = True
+            item.save()
 
+        return HttpResponseRedirect(reverse('item', args=(item_id, )))
 
     else:
-        return render(request, 'auctions/item.html', {
+        if item.closed:
+            return render(request, 'auctions/item_closed.html', {
             'item': item,
             'bid': bid,
-            'form_bid': NewBid(),
             'comments': comments,
-            'form_comment': NewComment()
-        })     
+            })    
+
+        else:
+            return render(request, 'auctions/item.html', {
+                'item': item,
+                'bid': bid,
+                'comments': comments,
+                'form_bid': NewBid(),
+                'form_comment': NewComment()
+            })    
+
 
 def login_view(request):
     if request.method == "POST":

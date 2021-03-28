@@ -3,16 +3,22 @@
 {% block body %}
 <h2>Item {{ item.id }}: {{ item.title }} | listed by {{ item.user }}.</h2>
 
+{% block status %}
+{% if item.user == user %}
+<form method="post">
+  {% csrf_token %}
+  <input type="submit" name="action" value="Close">
+</form>
+{% endif %}
+
 <h3>Bids:</h3>
-<p>Current highest bid:
-  {{ item.current_price }} {% if bid.user == user %} by you.{% endif %}
+<p>Current highest bid: {{ item.current_price }} 
+  {% if bid.user == user %} by you. {% endif %}
 </p>
 {% if messages %}
 <div class="messages">
   {% for message in messages %}
-  <div class="alert" role="alert">
-    <div {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</div>
-  </div>
+  <div class="alert" role="alert">{{ message }}</div>
   {% endfor %}
 </div>
 {% endif %}
@@ -23,16 +29,26 @@
   <input type="submit" name="action" value="Bid">
 </form>
 
-<h3>Comments:</h3>
-<ul>
-  {% for comment in comments %}
-  <li>{{ comment.comment }} posted by {% if comment.user == user %}you{% else %}{{ comment.user }}{% endif %}.</li>
-  {% endfor %}
-</ul>
-
 <form method="post">
   {% csrf_token %}
   {{ form_comment }}
   <input type="submit" name="action" value="Comment">
 </form>
+
+{% endblock %}
+
+<h3>Comments:</h3>
+<ul>
+  {% for comment in comments %}
+  <li>
+    {{ comment.comment }} posted by 
+    {% if comment.user == user %}
+    you
+    {% else %}
+    {{ comment.user }}
+    {% endif %}.
+  </li>
+  {% endfor %}
+</ul>
+
 {% endblock %}

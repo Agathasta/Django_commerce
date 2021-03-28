@@ -1,0 +1,17 @@
+{% extends "auctions/item.html" %}
+
+{% block status %}
+{% if bid.user == user %}
+You won the bid!
+The {{ item.title }} is yours for {{ item.current_price }}.
+Contact {{ item.user }}
+{% endif %}
+
+{% if item.user == user %}
+You are selling to {{ bid.user }} for {{ item.current_price }}
+{% endif %}
+
+The bid is closed!!
+
+
+{% endblock %}

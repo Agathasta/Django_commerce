@@ -15,11 +15,13 @@ class Listing(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='listings')
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='listings', default=1)
     title = models.CharField(max_length=32)
-    description = models.CharField(max_length=640)
+    description = models.CharField(max_length=640, blank=True)
+    image_url = models.URLField(max_length=200, blank=True)
     start_bid = models.DecimalField(max_digits=7, decimal_places=2)
     current_price = models.DecimalField(max_digits=7, decimal_places=2)
-    image_url = models.URLField(max_length=200, blank=True)
+    closed = models.BooleanField(default=False)
 
+    # https://stackoverflow.com/questions/4380879/django-model-field-default-based-off-another-field-in-same-model
     def save(self, *args, **kwargs):
         if self.current_price is None:
             self.current_price = self.start_bid

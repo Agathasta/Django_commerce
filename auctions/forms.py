@@ -7,7 +7,7 @@ class NewListing(forms.Form):
   description = forms.CharField(label="Description", max_length=640)
   category = forms.ModelChoiceField(queryset=Category.objects.all(), to_field_name="category")
   start_bid = forms.DecimalField(label="Starting bid", max_digits=7, decimal_places=2)
-  # image_url = forms.URLField(label="Image URL", max_length=200)
+  image_url = forms.URLField(label="Image URL", max_length=200)
 
 class NewBid(forms.Form):
   bid = forms.DecimalField(max_digits=7, decimal_places=2)
