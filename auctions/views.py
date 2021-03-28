@@ -5,6 +5,7 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
+from django.db.models import Max
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
@@ -42,7 +43,15 @@ def add(request):
         return render(request, 'auctions/add.html', {
             'form': NewListing(),
         })
+
+def item(request, item_id):
+    item = Listing.objects.get(pk=item_id)
+    max_bid = Bid.objects.filter(listing=item_id).order_by('-bid').first()
         
+    return render(request, 'auctions/item.html', {
+        'item': item,
+        'max_bid': max_bid,
+    })     
 
 def login_view(request):
     if request.method == "POST":

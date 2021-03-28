@@ -5,7 +5,9 @@
 
 <ul>
     {% for listing in listings %}
-    <li>Product: {{ listing.title }} | Listed by: {{ listing.user }}</li>
+    <li><a href="{% url 'item' listing.id %}">
+            Product: {{ listing.title }}</a> |
+        Listed by: {{ listing.user }}</li>
     {% endfor %}
 </ul>
 

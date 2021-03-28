@@ -1,0 +1,12 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+<h1>Item {{ item.id }}: {{ item.title }}</h1>
+<p>Posted by {{ item.user }}</p>
+<p>Current highest bid:
+  {% if max_bid == None %}
+  {{ item.start_bid }}
+  {% else %}
+  {{ max_bid.bid }} by {{ max_bid.user }}
+  {% endif %}</p>
+{% endblock %}
