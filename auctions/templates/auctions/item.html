@@ -2,7 +2,7 @@
 
 {% block body %}
 <h2>Item {{ item.id }}: {{ item.title }}</h2>
-<p>Posted by {{ item.user }}</p>
+<p>Posted by {{ item.user }}.</p>
 
 <p>Current highest bid:
   {{ max_bid }} {% if bid.user == user %} by you.{% endif %}
@@ -14,7 +14,19 @@
 
 <form method="post">
   {% csrf_token %}
-  {{ form }}
-  <input type="submit" value="Submit">
+  {{ form_bid }}
+  <input type="submit" name="action" value="Bid">
+</form>
+
+<ul>
+  {% for comment in comments %}
+  <li>{{ comment.comment }} posted by {% if comment.user == user %}you{% else %}{{ comment.user }}{% endif %}.</li>
+  {% endfor %}
+</ul>
+
+<form method="post">
+  {% csrf_token %}
+  {{ form_comment }}
+  <input type="submit" name="action" value="Comment">
 </form>
 {% endblock %}

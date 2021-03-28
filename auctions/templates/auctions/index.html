@@ -5,9 +5,8 @@
 
 <ul>
     {% for listing in listings %}
-    <li><a href="{% url 'item' listing.id %}">
-            Product: {{ listing.title }}</a> |
-        Listed by: {{ listing.user }}</li>
+    <li><a href="{% url 'item' listing.id %}">Product: {{ listing.title }}</a> | Listed by: {{ listing.user }} | Current
+        price: {{ listing.start_bid}} | Category: {{ listing.category }}</li>
     {% endfor %}
 </ul>
 

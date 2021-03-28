@@ -5,18 +5,18 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
-from django.db.models import Max
+# from django.db.models import Max
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .forms import NewListing, NewBid
-from .models import User, Listing, Bid, Comment
+from .forms import NewBid, NewComment, NewListing
+from .models import Bid, Category, Comment, Listing, User
 
 
 def index(request):
     return render(request, 'auctions/index.html', {
-        'listings': Listing.objects.all()
+        'listings': Listing.objects.all(),
     })
 
 @login_required(login_url='/login')
@@ -29,6 +29,7 @@ def add(request):
             new_listing.user = request.user
             new_listing.title = form.cleaned_data['title']
             new_listing.description = form.cleaned_data['description']
+            new_listing.category = form.cleaned_data['category']
             new_listing.start_bid = form.cleaned_data['start_bid']
             new_listing.save()
 
@@ -41,40 +42,59 @@ def add(request):
 
 @login_required(login_url='/login')
 def item(request, item_id):
+
     item = Listing.objects.get(pk=item_id)
     bid = Bid.objects.filter(listing=item_id).order_by('-bid').first()
+    comments = Comment.objects.filter(listing=item_id)
+
     if bid == None:
         max_bid = item.start_bid
     else:
         max_bid = bid.bid
 
     if request.method == 'POST':
-        form = NewBid(request.POST)
+        if request.POST['action'] == 'Bid':
+            form_bid = NewBid(request.POST)
 
-        if form.is_valid():
-            if form.cleaned_data['bid'] <= max_bid:
-                return render(request, 'auctions/item.html', {
-                    'item': item,
-                    'bid': bid,
-                    'max_bid': max_bid,
-                    'form': form,
-                    'message': f"Your bid needs to be at least {max_bid} high."
-            })
-            else:
-                new_bid = Bid()
-                new_bid.bid = form.cleaned_data['bid']
-                new_bid.listing = item
-                new_bid.user = request.user
-                new_bid.save()
+            if form_bid.is_valid():
+                if form_bid.cleaned_data['bid'] <= max_bid:
+                    return render(request, 'auctions/item.html', {
+                        'item': item,
+                        'bid': bid,
+                        'max_bid': max_bid,
+                        'form_bid': form_bid,
+                        'comments': comments,
+                        'form_comment': NewComment(),
+                        'message': f"Your bid needs to be at least {max_bid} high."
+                })
+                else:
+                    new_bid = Bid()
+                    new_bid.bid = form_bid.cleaned_data['bid']
+                    new_bid.listing = item
+                    new_bid.user = request.user
+                    new_bid.save()
+        
+        elif request.POST['action'] == 'Comment':
+            form_comment = NewComment(request.POST)
 
-            return HttpResponseRedirect(reverse('item', args=(item_id,)))
+            if form_comment.is_valid():
+                new_comment = Comment()
+                new_comment.comment = form_comment.cleaned_data['comment']
+                new_comment.listing = item
+                new_comment.user = request.user
+                new_comment.save()
+
+        return HttpResponseRedirect(reverse('item', args=(item_id,)))
+
 
     else:
         return render(request, 'auctions/item.html', {
             'item': item,
             'bid': bid,
             'max_bid': max_bid,
-            'form': NewBid(),
+            'form_bid': NewBid(),
+            'comments': comments,
+            'form_comment': NewComment()
         })     
 
 def login_view(request):
