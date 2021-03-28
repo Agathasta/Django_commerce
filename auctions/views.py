@@ -1,11 +1,10 @@
 # ana | fjfjfjfj
 # bob | wasp
 # admin | adminadmin
-
+from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
-# from django.db.models import Max
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
@@ -47,25 +46,19 @@ def item(request, item_id):
     bid = Bid.objects.filter(listing=item_id).order_by('-bid').first()
     comments = Comment.objects.filter(listing=item_id)
 
-    if bid == None:
-        max_bid = item.start_bid
-    else:
-        max_bid = bid.bid
-
     if request.method == 'POST':
         if request.POST['action'] == 'Bid':
             form_bid = NewBid(request.POST)
 
             if form_bid.is_valid():
-                if form_bid.cleaned_data['bid'] <= max_bid:
+                if form_bid.cleaned_data['bid'] <= item.current_price:
+                    messages.error(request, f"Your bid needs to be at least {item.current_price} high.")
                     return render(request, 'auctions/item.html', {
                         'item': item,
                         'bid': bid,
-                        'max_bid': max_bid,
                         'form_bid': form_bid,
                         'comments': comments,
                         'form_comment': NewComment(),
-                        'message': f"Your bid needs to be at least {max_bid} high."
                 })
                 else:
                     new_bid = Bid()
@@ -73,6 +66,9 @@ def item(request, item_id):
                     new_bid.listing = item
                     new_bid.user = request.user
                     new_bid.save()
+                    # To display highest bid in index page
+                    item.current_price = form_bid.cleaned_data['bid']
+                    item.save()
         
         elif request.POST['action'] == 'Comment':
             form_comment = NewComment(request.POST)
@@ -91,7 +87,6 @@ def item(request, item_id):
         return render(request, 'auctions/item.html', {
             'item': item,
             'bid': bid,
-            'max_bid': max_bid,
             'form_bid': NewBid(),
             'comments': comments,
             'form_comment': NewComment()
