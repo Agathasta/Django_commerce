@@ -1,12 +1,20 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-<h1>Item {{ item.id }}: {{ item.title }}</h1>
+<h2>Item {{ item.id }}: {{ item.title }}</h2>
 <p>Posted by {{ item.user }}</p>
+
 <p>Current highest bid:
-  {% if max_bid == None %}
-  {{ item.start_bid }}
-  {% else %}
-  {{ max_bid.bid }} by {{ max_bid.user }}
-  {% endif %}</p>
+  {{ max_bid }} {% if bid.user == user %} by you.{% endif %}
+</p>
+
+{% if message %}
+<div>{{ message }}</div>
+{% endif %}
+
+<form method="post">
+  {% csrf_token %}
+  {{ form }}
+  <input type="submit" value="Submit">
+</form>
 {% endblock %}

@@ -10,7 +10,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .forms import NewListing
+from .forms import NewListing, NewBid
 from .models import User, Listing, Bid, Comment
 
 
@@ -23,35 +23,59 @@ def index(request):
 def add(request):
     if request.method == 'POST':
         form = NewListing(request.POST)
-        user = request.user
 
         if form.is_valid():
             new_listing = Listing()
-            new_listing.user_id = user.id
+            new_listing.user = request.user
             new_listing.title = form.cleaned_data['title']
             new_listing.description = form.cleaned_data['description']
             new_listing.start_bid = form.cleaned_data['start_bid']
             new_listing.save()
 
             return HttpResponseRedirect(reverse('index'))
-        else:
-            return render(request, 'auctions/add.html', {
-                'form': form
-            })
             
     else:
         return render(request, 'auctions/add.html', {
             'form': NewListing(),
         })
 
+@login_required(login_url='/login')
 def item(request, item_id):
     item = Listing.objects.get(pk=item_id)
-    max_bid = Bid.objects.filter(listing=item_id).order_by('-bid').first()
-        
-    return render(request, 'auctions/item.html', {
-        'item': item,
-        'max_bid': max_bid,
-    })     
+    bid = Bid.objects.filter(listing=item_id).order_by('-bid').first()
+    if bid == None:
+        max_bid = item.start_bid
+    else:
+        max_bid = bid.bid
+
+    if request.method == 'POST':
+        form = NewBid(request.POST)
+
+        if form.is_valid():
+            if form.cleaned_data['bid'] <= max_bid:
+                return render(request, 'auctions/item.html', {
+                    'item': item,
+                    'bid': bid,
+                    'max_bid': max_bid,
+                    'form': form,
+                    'message': f"Your bid needs to be at least {max_bid} high."
+            })
+            else:
+                new_bid = Bid()
+                new_bid.bid = form.cleaned_data['bid']
+                new_bid.listing = item
+                new_bid.user = request.user
+                new_bid.save()
+
+            return HttpResponseRedirect(reverse('item', args=(item_id,)))
+
+    else:
+        return render(request, 'auctions/item.html', {
+            'item': item,
+            'bid': bid,
+            'max_bid': max_bid,
+            'form': NewBid(),
+        })     
 
 def login_view(request):
     if request.method == "POST":
