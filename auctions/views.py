@@ -129,11 +129,19 @@ def watch(request, item_id):
         user = request.user
 
         if request.POST['action'] == 'Watch':
-            user.listing.add(item)
+            user.watching.add(item)
         elif request.POST['action'] == 'Unwatch':
-            user.listing.remove(item)
+            user.watching.remove(item)
 
         return HttpResponseRedirect(reverse('item', args=(item_id,)))
+
+@login_required(login_url='/login')
+def watchlist(request):
+    user = request.user
+
+    return render(request, 'auctions/watchlist.html', {
+        'listings': user.watching.all()
+    })
 
 
 def login_view(request):

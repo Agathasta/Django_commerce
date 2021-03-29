@@ -3,7 +3,7 @@ from django.db import models
 
 
 class User(AbstractUser):
-    listing = models.ManyToManyField('Listing', blank=True, related_name='watchers')
+    watching = models.ManyToManyField('Listing', blank=True, related_name='watchers')
 
 
 class Bid(models.Model):
