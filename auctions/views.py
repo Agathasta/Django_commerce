@@ -18,6 +18,11 @@ def index(request):
         'listings': Listing.objects.exclude(closed=True).all(),
     })
 
+def categories(request):
+    return render(request, 'auctions/categories.html', {
+        'categories': Category.objects.all().order_by('category'),
+    })
+
 @login_required(login_url='/login')
 def add(request):
     if request.method == 'POST':
