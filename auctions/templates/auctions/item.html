@@ -3,14 +3,26 @@
 {% block body %}
 <h2>Item {{ item.id }}: {{ item.title }} | listed by {{ item.user }}.</h2>
 
+<!-- Ability to close the auction -->
 {% block status %}
 {% if item.user == user %}
-<form method="post">
-  {% csrf_token %}
-  <input type="submit" name="action" value="Close">
-</form>
+	<form method="post">
+  		{% csrf_token %}
+  		<input type="submit" name="action" value="Close">
+	</form>
+{% else %}
+<!-- Ability to watch the auction --> 
+	<form action="{% url 'watch' item.id %}" method="post">
+		{% csrf_token %}
+		{% if watching %}
+		<input type="submit" name="action" value="Unwatch">
+		{% else %}
+		<input type="submit" name="action" value="Watch">
+		{% endif %}
+	</form>
 {% endif %}
 
+<!-- Bids with validation -->
 <h3>Bids:</h3>
 <p>Current highest bid: {{ item.current_price }} 
   {% if bid.user == user %} by you. {% endif %}
@@ -29,24 +41,32 @@
   <input type="submit" name="action" value="Bid">
 </form>
 
+<!-- List watchers -->
+<h3>Watched by:</h3>
+<ul>
+	{% for watcher in watchers %}
+		<li>{{ watcher }}</li>
+	{% empty %}
+		<li>Nobody watching</li>
+	{% endfor %}
+</ul>
+
+<!-- Add comment -->
 <form method="post">
-  {% csrf_token %}
-  {{ form_comment }}
-  <input type="submit" name="action" value="Comment">
-</form>
+	{% csrf_token %}
+	{{ form_comment }}
+	<input type="submit" name="action" value="Comment">
+  </form>  
 
 {% endblock %}
 
+<!-- Display comments -->
 <h3>Comments:</h3>
 <ul>
   {% for comment in comments %}
   <li>
     {{ comment.comment }} posted by 
-    {% if comment.user == user %}
-    you
-    {% else %}
-    {{ comment.user }}
-    {% endif %}.
+    {% if comment.user == user %}you{% else %}{{ comment.user }}{% endif %}.
   </li>
   {% endfor %}
 </ul>

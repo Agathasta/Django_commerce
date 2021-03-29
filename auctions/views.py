@@ -46,6 +46,11 @@ def item(request, item_id):
     item = Listing.objects.get(pk=item_id)
     bid = Bid.objects.filter(listing=item_id).order_by('-bid').first()
     comments = Comment.objects.filter(listing=item_id)
+    watchers = item.watchers.all()
+    if item.watchers.filter(username=request.user):
+        watching = True
+    else:
+        watching = False
 
     if request.method == 'POST':
         # For bids sent
@@ -84,6 +89,7 @@ def item(request, item_id):
                 new_comment.user = request.user
                 new_comment.save()
 
+        
         # For closed listing
         elif request.POST['action'] == 'Close':
             item.closed = True
@@ -102,11 +108,27 @@ def item(request, item_id):
         else:
             return render(request, 'auctions/item.html', {
                 'item': item,
+                'watchers': watchers,
+                'watching': watching,
                 'bid': bid,
                 'comments': comments,
                 'form_bid': NewBid(),
                 'form_comment': NewComment()
             })    
+
+@login_required(login_url='/login')
+def watch(request, item_id):
+
+    if request.method == 'POST':
+        item = Listing.objects.get(pk=item_id)
+        user = request.user
+
+        if request.POST['action'] == 'Watch':
+            user.listing.add(item)
+        elif request.POST['action'] == 'Unwatch':
+            user.listing.remove(item)
+
+        return HttpResponseRedirect(reverse('item', args=(item_id,)))
 
 
 def login_view(request):
