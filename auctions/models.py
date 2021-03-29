@@ -10,9 +10,10 @@ class Bid(models.Model):
     listing = models.ForeignKey('Listing', on_delete=models.CASCADE, related_name='bids')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='bids')
     bid = models.DecimalField(max_digits=7, decimal_places=2)
+    winning_bid = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"Bid of {self.bid}€ on {self.listing} by {self.user}"
+        return f"Bid of {self.bid}€ on {self.listing.title} by {self.user}"
 
 
 class Category(models.Model):
@@ -45,4 +46,4 @@ class Listing(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.title}: listed by {self.user}, current price is {self.start_bid}"
+        return f"{self.title}: listed by {self.user}, current price is {self.current_price}"

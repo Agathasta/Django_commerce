@@ -58,6 +58,15 @@ def item(request, item_id):
         watching = False
 
     if request.method == 'POST':
+
+        # For watching / unwatching item
+        user = request.user
+
+        if request.POST['action'] == 'Watch':
+            user.watching.add(item)
+        elif request.POST['action'] == 'Unwatch':
+            user.watching.remove(item)
+
         # For bids sent
         if request.POST['action'] == 'Bid':
             form_bid = NewBid(request.POST)
@@ -99,6 +108,8 @@ def item(request, item_id):
         elif request.POST['action'] == 'Close':
             item.closed = True
             item.save()
+            bid.winning_bid = True
+            bid.save()
 
         return HttpResponseRedirect(reverse('item', args=(item_id, )))
 
@@ -121,26 +132,15 @@ def item(request, item_id):
                 'form_comment': NewComment()
             })    
 
-@login_required(login_url='/login')
-def watch(request, item_id):
-
-    if request.method == 'POST':
-        item = Listing.objects.get(pk=item_id)
-        user = request.user
-
-        if request.POST['action'] == 'Watch':
-            user.watching.add(item)
-        elif request.POST['action'] == 'Unwatch':
-            user.watching.remove(item)
-
-        return HttpResponseRedirect(reverse('item', args=(item_id,)))
 
 @login_required(login_url='/login')
-def watchlist(request):
+def portfolio(request):
     user = request.user
 
-    return render(request, 'auctions/watchlist.html', {
-        'listings': user.watching.all()
+    return render(request, 'auctions/portfolio.html', {
+        'watching': user.watching.all().order_by('title'),
+        'bids': user.bids.all().order_by('listing', '-bid'),
+        'listings': user.listings.all().order_by('closed', 'title')
     })
 
 
