@@ -68,7 +68,7 @@ def item(request, item_id):
             user.watching.remove(item)
 
         # For bids sent
-        if request.POST['action'] == 'Bid':
+        elif request.POST['action'] == 'Bid':
             form_bid = NewBid(request.POST)
 
             if form_bid.is_valid():
@@ -85,7 +85,7 @@ def item(request, item_id):
                     new_bid = Bid()
                     new_bid.bid = form_bid.cleaned_data['bid']
                     new_bid.listing = item
-                    new_bid.user = request.user
+                    new_bid.user = user
                     new_bid.save()
 
                     # To display highest bid in index page
@@ -100,7 +100,7 @@ def item(request, item_id):
                 new_comment = Comment()
                 new_comment.comment = form_comment.cleaned_data['comment']
                 new_comment.listing = item
-                new_comment.user = request.user
+                new_comment.user = user
                 new_comment.save()
 
         
@@ -146,6 +146,8 @@ def portfolio(request):
 
 def login_view(request):
     if request.method == "POST":
+        # http://www.learningaboutelectronics.com/Articles/How-to-redirect-a-user-after-login-to-the-URL-in-the-next-parameter-in-Django.php
+        valuenext= request.POST.get('next')
 
         # Attempt to sign user in
         username = request.POST["username"]
@@ -155,7 +157,7 @@ def login_view(request):
         # Check if authentication successful
         if user is not None:
             login(request, user)
-            return HttpResponseRedirect(reverse("index"))
+            return HttpResponseRedirect(valuenext)
         else:
             return render(request, "auctions/login.html", {
                 "message": "Invalid username and/or password."

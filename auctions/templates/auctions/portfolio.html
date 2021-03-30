@@ -45,7 +45,7 @@
   <li>
     <a href="{% url 'item' listing.id %}">{{ listing.title }}</a> |
     {% if listing.closed %} Sold for: {% else %} Current price: {% endif %}
-    {{ listing.current_price }} EUR
+    {{ listing.current_price }} EUR  
   </li>
   {% endfor %}
 </ul>
