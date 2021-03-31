@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
+from django.db.models import Max
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
@@ -137,9 +138,13 @@ def item(request, item_id):
 def portfolio(request):
     user = request.user
 
+    # https://stackoverflow.com/questions/17841525/django-how-to-use-group-by-and-max-to-get-complete-row-in-queryset-and-disp
+    id_list = Bid.objects.filter(user=user).values('user','listing').annotate(Max('id')).values('id__max')
+    bids = Bid.objects.filter(pk__in=id_list)
+
     return render(request, 'auctions/portfolio.html', {
         'watching': user.watching.all().order_by('title'),
-        'bids': user.bids.all().order_by('listing', '-bid'),
+        'bids': bids,
         'listings': user.listings.all().order_by('closed', 'title')
     })
 

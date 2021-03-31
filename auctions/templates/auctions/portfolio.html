@@ -23,6 +23,8 @@
     Your bid: {{bid.bid}} EUR |
     {% if bid.bid != bid.listing.current_price %}
     Current price: {{ bid.listing.current_price }}
+    {% else %}
+    Highest bid!
     {% endif %}
   </li>
   {% endif %}

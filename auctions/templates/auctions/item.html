@@ -6,6 +6,9 @@
 <!-- Ability to close the auction -->
 {% block status %}
 {% if item.user == user %}
+<p>Current highest bid: {{ item.current_price }}
+	{% if bid.user == user %} by you. {% endif %}
+</p>
 <form method="post">
 	{% csrf_token %}
 	<input type="submit" name="action" value="Close">
@@ -20,7 +23,6 @@
 	<input type="submit" name="action" value="Watch">
 	{% endif %}
 </form>
-{% endif %}
 
 <!-- Bids with validation -->
 <h3>Bids:</h3>
@@ -40,6 +42,7 @@
 	{{ form_bid }}
 	<input type="submit" name="action" value="Bid">
 </form>
+{% endif %}
 
 <!-- List watchers -->
 <h3>Watched by:</h3>
