@@ -1,3 +1,23 @@
 body {
-    padding: 10px;
+    padding: 0px;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+img {
+    max-width: 30vw;
+    max-height: 250px;
+}
+
+a {
+    color: rgb(187, 30, 30);
+}
+
+a:hover {
+    color: rgb(141, 22, 22);
+}
+
+@media(min-width: 992px) {
+    .listings {
+        padding: 1rem 8rem !important;
+    }
 }

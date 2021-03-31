@@ -1,19 +1,23 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
+<div class="container listings">
+  <h2>Categories</h2>
 
 {% for category in categories %}
+<div class="px-4 pt-3">
+  <h3 class="h5">{{ category }}</h3>
 
-<h2>{{ category }}</h2>
-
-<ul>
-  {% for listing in category.listings.all %}
-  {% if not listing.closed %}
-  <li><a href="{% url 'item' listing.id %}">{{ listing.title }}</a></li>
-  {% endif %}
-  {% endfor %}
-</ul>
-
+  <ul>
+    {% for listing in category.listings.all %}
+    {% if not listing.closed %}
+    <li><a href="{% url 'item' listing.id %}">{{ listing.title }}</a> ${{ listing.current_price }}</li>
+    {% endif %}
+    {% empty %}
+    <li>No active listings</li>
+    {% endfor %}
+  </ul>
+</div>
 {% endfor %}
-
+</div>
 {% endblock %}

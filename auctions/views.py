@@ -21,7 +21,7 @@ def index(request):
 
 def categories(request):
     return render(request, 'auctions/categories.html', {
-        'categories': Category.objects.all().order_by('category'),
+        'categories': Category.objects.all().order_by('id'),
     })
 
 @login_required(login_url='/login')
@@ -152,7 +152,9 @@ def portfolio(request):
 def login_view(request):
     if request.method == "POST":
         # http://www.learningaboutelectronics.com/Articles/How-to-redirect-a-user-after-login-to-the-URL-in-the-next-parameter-in-Django.php
-        valuenext= request.POST.get('next')
+        valuenext = request.POST.get('next')
+        if valuenext == '':
+            valuenext = reverse('index')
 
         # Attempt to sign user in
         username = request.POST["username"]

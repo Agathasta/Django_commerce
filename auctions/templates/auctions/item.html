@@ -1,77 +1,79 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-<h2>Item {{ item.id }}: {{ item.title }} | listed by {{ item.user }}.</h2>
+<div class="container">
+	<h2>Item {{ item.id }}: {{ item.title }} | listed by {{ item.user }}.</h2>
 
-<!-- Ability to close the auction -->
-{% block status %}
-{% if item.user == user %}
-<p>Current highest bid: {{ item.current_price }}
-	{% if bid.user == user %} by you. {% endif %}
-</p>
-<form method="post">
-	{% csrf_token %}
-	<input type="submit" name="action" value="Close">
-</form>
-{% else %}
-<!-- Ability to watch the auction -->
-<form method="post">
-	{% csrf_token %}
-	{% if watching %}
-	<input type="submit" name="action" value="Unwatch">
+	<!-- Ability to close the auction -->
+	{% block status %}
+	{% if item.user == user %}
+	<p>Current highest bid: {{ item.current_price }}
+		{% if bid.user == user %} by you. {% endif %}
+	</p>
+	<form method="post">
+		{% csrf_token %}
+		<input type="submit" name="action" value="Close">
+	</form>
 	{% else %}
-	<input type="submit" name="action" value="Watch">
+	<!-- Ability to watch the auction -->
+	<form method="post">
+		{% csrf_token %}
+		{% if watching %}
+		<input type="submit" name="action" value="Unwatch">
+		{% else %}
+		<input type="submit" name="action" value="Watch">
+		{% endif %}
+	</form>
+
+	<!-- Bids with validation -->
+	<h3>Bids:</h3>
+	<p>Current highest bid: {{ item.current_price }}
+		{% if bid.user == user %} by you. {% endif %}
+	</p>
+	{% if messages %}
+	<div class="messages">
+		{% for message in messages %}
+		<div class="alert" role="alert">{{ message }}</div>
+		{% endfor %}
+	</div>
 	{% endif %}
-</form>
 
-<!-- Bids with validation -->
-<h3>Bids:</h3>
-<p>Current highest bid: {{ item.current_price }}
-	{% if bid.user == user %} by you. {% endif %}
-</p>
-{% if messages %}
-<div class="messages">
-	{% for message in messages %}
-	<div class="alert" role="alert">{{ message }}</div>
-	{% endfor %}
+	<form method="post">
+		{% csrf_token %}
+		{{ form_bid }}
+		<input type="submit" name="action" value="Bid">
+	</form>
+	{% endif %}
+
+	<!-- List watchers -->
+	<h3>Watched by:</h3>
+	<ul>
+		{% for watcher in watchers %}
+		<li>{{ watcher }}</li>
+		{% empty %}
+		<li>Nobody watching</li>
+		{% endfor %}
+	</ul>
+
+	<!-- Add comment -->
+	<form method="post">
+		{% csrf_token %}
+		{{ form_comment }}
+		<input type="submit" name="action" value="Comment">
+	</form>
+
+	{% endblock %}
+
+	<!-- Display comments -->
+	<h3>Comments:</h3>
+	<ul>
+		{% for comment in comments %}
+		<li>
+			{{ comment.comment }} posted by
+			{% if comment.user == user %}you{% else %}{{ comment.user }}{% endif %}.
+		</li>
+		{% endfor %}
+	</ul>
 </div>
-{% endif %}
-
-<form method="post">
-	{% csrf_token %}
-	{{ form_bid }}
-	<input type="submit" name="action" value="Bid">
-</form>
-{% endif %}
-
-<!-- List watchers -->
-<h3>Watched by:</h3>
-<ul>
-	{% for watcher in watchers %}
-	<li>{{ watcher }}</li>
-	{% empty %}
-	<li>Nobody watching</li>
-	{% endfor %}
-</ul>
-
-<!-- Add comment -->
-<form method="post">
-	{% csrf_token %}
-	{{ form_comment }}
-	<input type="submit" name="action" value="Comment">
-</form>
-
-{% endblock %}
-
-<!-- Display comments -->
-<h3>Comments:</h3>
-<ul>
-	{% for comment in comments %}
-	<li>
-		{{ comment.comment }} posted by
-		{% if comment.user == user %}you{% else %}{{ comment.user }}{% endif %}.
-	</li>
-	{% endfor %}
-</ul>
 
 {% endblock %}
