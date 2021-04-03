@@ -1,22 +1,18 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-<div class="container listings">
-    <h2>Active Listings</h2>
+<h2>Active Listings</h2>
 
-    {% for listing in listings %}
-    <div class="d-flex justify-content-between p-3">
-        <div class="d-flex flex-column">
-            <a class="h3" href="{% url 'item' listing.id %}">{{ listing.title }}</a>
-            <p class="h6">{{ listing.description }}</p>
-            <p class="h5">Price: ${{ listing.current_price }}</p>
-            <p class="h6">Category: {{ listing.category }}</p>
-        </div>
-        <div>
-            <img src="{{ listing.image_url }}">
-        </div>
-    </div>
-    <hr>
-    {% endfor %}
+{% for listing in listings %}
+<div class="list short">
+    <ul>
+        <li class="li-title"><a href="{% url 'item' listing.id %}">{{ listing.title }}</a></li>
+        <li>{{ listing.description }}</li>
+        <li><strong>Price: ${{ listing.current_price }}</strong></li>
+        <li>Category: {{ listing.category }}</li>
+    </ul>
+    <img src="{{ listing.image_url }}">
 </div>
+
+{% endfor %}
 {% endblock %}

@@ -1,11 +1,35 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
+<h2>Sell</h2>
+<div>
+  <form method="post" class="vertical-form">
+    {% csrf_token %}
+    <div>
+      {{ form.title.label }}
+      {{ form.title }}
+    </div>
+    <div>
+      {{ form.description.label }}
+      {{ form.description }}
+    </div>
+    <div>
+      {{ form.image_url.label }}
+      {{ form.image_url }}
+    </div>
+    <div>
+      {{ form.category.label }}
+      {{ form.category }}
+    </div>
+    <div>
+      {{ form.start_bid.label }}
+      {{ form.start_bid }}
+    </div>
+    <input type="submit" value="Submit">
 
-<form method="post">
-  {% csrf_token %}
-  {{ form }}
-  <input type="submit" value="Submit">
-</form>
+
+    
+  </form>
+</div>
 
 {% endblock %}

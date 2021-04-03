@@ -1,23 +1,380 @@
-body {
-    padding: 0px;
-    font-family: 'Courier New', Courier, monospace;
+:root {
+    --text-color: rgb(30, 30, 30);
+    --link-color: rgb(118, 118, 118);
+    --light-gray: rgba(199, 198, 198);
+    --shadow: 0 .1em .5em rgba(0,0,0,0.2);
+    --header-font: "Helvetica Neue", sans-serif;
 }
 
-img {
-    max-width: 30vw;
-    max-height: 250px;
+html, body {
+    width: 100vw;
+}
+
+html, body, div, form, fieldset, h1, h2, h3, h4, h5, h6, hr, input, nav, li, ol, ul, span, table, tr, td, th, p, img {
+    margin: 0;
+    padding: 0;
+    color: var(--text-color);
+}
+
+body {
+    font-family: 'Courier New', Courier, monospace;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 100vh;
+}
+
+h2, h3 {
+    padding-bottom: 1rem;
+}
+
+p, input, select {
+    line-height: 2em;
+}
+
+input[type="submit"] {
+    border: 1px solid var(--light-gray);
+    border-radius: 1em;
+    width: 6em;
+    background-color: #fff;
+    font-family: var(--header-font);
+}
+input[type="submit"]:hover {
+    background-color: var(--light-gray);
+    cursor: pointer;
+}
+
+input, select {
+    padding: 0 0.5em;
+    font-size: 0.8rem;
+    box-sizing: border-box ;
+}
+
+/* Thanks to Henrik: https://stackoverflow.com/questions/1895476/how-do-i-style-a-select-dropdown-with-only-css */
+select {
+    -webkit-appearance: none;
+    appearance: none;
+    border: 0.5px solid var(--light-gray);
+    background-image: linear-gradient(var(--link-color), var(--link-color)),
+        linear-gradient(-135deg, transparent 50%, var(--light-gray) 50%),
+        linear-gradient(-225deg, transparent 50%, var(--light-gray) 50%),
+        linear-gradient(var(--light-gray) 42%, var(--text-color) 42%);
+    background-repeat: no-repeat, no-repeat, no-repeat, no-repeat;
+    background-size: 1px 100%, 20px 22px, 20px 22px, 20px 100%;
+    background-position: right 20px center, right bottom, right bottom, right bottom;
+}
+
+form {
+    padding-bottom: 2em;
+}
+
+li {
+    list-style: none;
 }
 
 a {
-    color: rgb(187, 30, 30);
+    color: var(--link-color);
+    text-decoration: none;
+    transition: all 0.3s linear;
 }
 
 a:hover {
-    color: rgb(141, 22, 22);
+    color: var(--text-color);
 }
 
-@media(min-width: 992px) {
-    .listings {
-        padding: 1rem 8rem !important;
+/* || LAYOUT */
+
+nav {
+    display: flex;
+    align-items: end; /* to compensate the height to reach the dropdown */
+    min-width: 100vw;
+    position: fixed;
+    background-color: #fff;
+    box-shadow: var(--shadow);
+    padding: 0.6em 0;
+}
+
+#nav-left {
+    flex-grow: 1; /* to get the other two children of <nav> to the right */
+    padding-left: 1em;
+}
+
+h1 {
+    display: inline-block; /* to get both lines together */
+    font-size: 2rem;
+}
+
+h1 p {
+    font-size: 0.9rem;
+    color: var(--text-color);
+    text-align: right;
+    line-height: 1em;
+}
+
+#nav-right {
+    padding-right: 2em;
+}
+
+#nav-right > a {
+    padding-right: 1em;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+     /* to reach the dropdown */
+}
+
+.dropdown-content {
+    position: absolute;
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s 0.4s, opacity 0.4s linear;
+    background-color: rgba(0, 0, 0, 0.74);
+    display: flex;  /* links in one line */
+    white-space: nowrap; /* links in one line */
+    margin-top: 0.5em;  /* to separate the dropdown */
+    padding: 0.8em 1em;
+    right: 0;
+    box-shadow: var(--shadow);
+}
+
+.dropdown-content a {
+    color: var(--light-gray);
+    padding: 0 0.5em;
+}
+
+.dropdown-content a:hover {
+    color: #fff;
+}
+
+.dropdown:hover .dropdown-content {
+    /* display: block; */
+    visibility: visible;
+    opacity: 1;
+    transition: opacity 0.4s linear;
+    border-radius: .2em;
+}
+
+nav a {
+    margin-left: 1em;  
+}
+
+main {
+    padding-top: 8rem; /* cause the fixed nav */
+    /* max-width: 65rem; */
+}
+
+#footer {
+    width: 100vw;
+    background: var(--text-color);
+    display: flex;
+    justify-content: space-between;
+}
+
+#footer div {
+    color: var(--light-gray);
+    font-family: var(--header-font);
+    font-size: 0.8rem;
+    margin: 1em;
+}
+
+/* || PAGES  */
+
+.list {
+    display: flex;
+    justify-content: space-between;
+    align-items:flex-start;
+    padding: 1rem;
+    border-bottom: 0.5px solid var(--text-color);
+}
+
+.short {
+    max-height: 25vh;
+}
+.list li  {
+    padding: 0.5em 0;
+}
+
+.item-text li,
+.category li {
+    list-style: inside;
+    padding: 0.5em 0;
+}
+
+.category li {
+    display: flex;
+    justify-content: space-between;
+    min-width: 40vw;
+}
+
+.category ul {
+    border-bottom: 0.5px solid var(--text-color);
+}
+
+img {
+    max-width: 40vw;
+    max-height: 25vh;
+}
+
+.cat-h3, .portfolio h3 {
+    padding-top: 1.5em;
+}
+
+.list ul li a, .portfolio ul li a {
+    font-size: 1.3rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    padding-right: 1em;
+}
+.item-text, .comments {
+    display: flex;
+    flex-direction: column;
+    align-items: space-between;
+}
+
+.item-text > div, .comments > form {
+    display: flex;
+    align-items: center;
+}
+.item-text > div, .comments > form {
+    justify-content: space-between;
+}
+.comments > form > [type="text"],
+.item-text > form > [type="number"] {
+    flex-grow: 1;
+    margin: 0 1em;
+}
+.comments {
+    padding: 1rem;
+}
+.comments p {
+    line-height: 1.5em;
+}
+/* Thanks to Rik Schennink: https://codepen.io/rikschennink/pen/mjywQb */
+.bubble {
+	/* layout */
+	position: relative;
+	max-width: 20em;
+
+	/* looks */
+	padding: 0.8em 1.5em;
+    margin: 2em 0 0.3em 0;
+	font-size: 1.1em;
+	border-radius: 2rem;
+    box-shadow:	0 0.125rem 0.5rem rgba(0, 0, 0, .3), 0 0.0625rem 0.125rem rgba(0, 0, 0, .2);
+}
+
+.bubble::before {
+	/* layout */
+	content: '';
+	position: absolute;
+	width: 0;
+	height: 0;
+	bottom: 100%;
+	border: .65rem solid transparent;
+	border-top: none;
+}
+
+.posted-you {
+    text-align: right;
+    left: 100%;
+    transform: translateX(-100%);
+    background-color: var(--text-color);
+    color: var(--light-gray);
+}
+
+.posted-you::before {
+    border-bottom-color: var(--text-color);
+    right: 2em; /* offset should move with padding of parent */
+}
+
+.posted-other {
+    background-color: var(--light-gray);
+}
+
+.posted-other::before {
+    border-bottom-color: var(--light-gray);
+    left: 2em; /* offset should move with padding of parent */
+}
+.comments small {
+    padding-left: 1.5em;
+}
+
+.vertical-form, .portfolio {
+    display: inline-flex;
+    flex-direction: column;
+}
+
+.vertical-form div, .portfolio li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 1em;
+    margin-bottom: 1em;
+}
+
+.vertical-form div input,
+.vertical-form div select {
+    min-width: 35vw;
+    margin-left: 2em;
+}
+
+.vertical-form input[type="submit"] {
+    align-self: flex-end;
+    margin-top: 2em;
+}
+
+
+@media(min-width: 1300px) {
+    .list, .vertical-form {
+        width: 50vw;
+    }
+}
+@media(max-width: 700px) {
+    nav, main, #footer {
+        font-size: 0.9rem;
+    }
+    h1 {
+        font-size: 1.7rem;
+    }
+    .list ul li a {
+        font-size: 1.2rem;
+    }
+    h2, ul, .cat-h3 {
+        padding-left: 1rem;
+    }
+    #nav-right, #nav-left {
+        padding: 0 .4rem;
+    }
+    .list form input {
+        width: 6em;
+        margin: 0.3em;
+    }
+
+}
+@media(max-width: 400px) {
+    nav, #footer div {
+        font-size: 0.7rem;
+    }
+    main {
+        padding-top: 5rem;
+        font-size: 0.8rem;
+    }
+    h1 {
+        font-size: 1.4em;
+    }
+    .list ul li a {
+        font-size: 1em;
+    }
+    h2 {
+        padding-left: 1em;
+    }
+    #nav-right, #nav-left {
+        padding: 0 .4em;
+    }
+    .screen {
+        display: none;
     }
 }

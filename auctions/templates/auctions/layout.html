@@ -7,46 +7,44 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" 
-        integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
     <link href="{% static 'auctions/styles.css' %}" rel="stylesheet">
 
     <title>{% block title %}Auctions{% endblock %}</title>
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light">
-        <span class="navbar-brand mb-0 h1">Auctions</span>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse justify-content-between" id="navbarToggle">
-            <div class="navbar-nav">
-                <a class="nav-link" href="{% url 'index' %}">Active Listings</a>
-                <a class="nav-link" href="{% url 'categories' %}">Categories</a>
+    <nav role="navigation">
+        <div id="nav-left">
+            <h1>
+                <a href="/">auctions<p class="screen">AM City Watch</p></a>
+            </h1>
+        </div>
+        <div id="nav-right">
+            <a href="{% url 'categories' %}">Categories</a>
+            {% if user.is_authenticated %}
+            <div class="dropdown">
+                <span><strong>{{ user.username }}</strong> &#9660;</span>
+                <div class="dropdown-content">
+                    <a href="{% url 'index' %}">Buy</a>
+                    <a href="{% url 'add' %}">Sell</a>
+                    <a href="{% url 'portfolio' %}">Portfolio</a>
+                    <a href="{% url 'logout' %}?next={{request.path}}">Log Out</a>
+                </div>
             </div>
-            <div class="navbar-nav">
-                {% if user.is_authenticated %}
-                <span class="nav-item p-2">Signed in as <strong>{{ user.username }}</strong></span>
-                <a class="nav-link" href="{% url 'add' %}">Add Listing</a>
-                <a class="nav-link" href="{% url 'portfolio' %}">My Portfolio</a>
-                <a class="nav-link" href="{% url 'logout' %}?next={{request.path}}">Log Out</a>
-                {% else %}
-                <span class="nav-item p-2">Not signed in</span>
-                <a class="nav-link" href="{% url 'login' %}?next={{request.path}}">Log In</a>
-                <a class="nav-link" href="{% url 'register' %}">Register</a>
-                {% endif %}
-            </div>
+            {% else %}
+            <a href="{% url 'login' %}?next={{request.path}}">Log In</a>
+            {% endif %}
         </div>
     </nav>
-    <hr>
-    {% block body %}
-    {% endblock %}
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" 
-        integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
 
-
+    <main>
+        {% block body %}
+        {% endblock %}
+    </main>
+    <div id="footer">
+        <div>Practicing Django, SQLite & CSS</div>
+        <div>&#169;AGS</div>
+    </div>
 </body>
 
 </html>

@@ -1,6 +1,7 @@
 {% extends "auctions/item.html" %}
 
 {% block status %}
+
 {% if bid.user == user %}
 You won the bid!
 The {{ item.title }} is yours for {{ item.current_price }}.
