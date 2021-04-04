@@ -1,8 +1,9 @@
 :root {
     --text-color: rgb(13, 13, 13);
-    --link-color: rgb(27, 51, 27);
-    --light-gray: rgb(198, 198, 198);
+    --link-color: rgb(47, 77, 47);
     --link-hover: rgb(224, 150, 38);
+    --light-gray: rgb(198, 198, 198);
+    --medium-gray: rgb(100, 100, 100);
     --shadow: 0 .1em .5em rgba(0,0,0,0.2);
     --header-font: "Helvetica Neue", sans-serif;
 }
@@ -226,6 +227,7 @@ img {
 .item h3,
 .portfolio h3 {
     padding-top: 1.5em;
+    color: var(--medium-gray)
 }
 
 .item p {
@@ -234,9 +236,10 @@ img {
 
 .messages {
     background-color: rgba(255, 0, 0, 0.5);
-    padding: 0.5em 1em;
+    padding: 0.1em 1em;
     margin-bottom: 1em;
     border-radius: 3px;
+    font-size: 0.9rem;
 }
 
 .item [type="text"],
@@ -318,11 +321,11 @@ img {
 }
 
 
-@media(min-width: 1300px) {
+/* @media(min-width: 1300px) {
     .horizontal-flex, .vertical-form {
         width: 50vw;
     }
-}
+} */
 @media(max-width: 700px) {
     nav, main, #footer {
         font-size: 0.9rem;

@@ -66,7 +66,7 @@ def item(request, item_id):
 
     if request.method == 'POST':
 
-        # For watching / unwatching item
+        # Watching / unwatching item
         user = request.user
 
         if request.POST['action'] == 'Watch':
@@ -74,7 +74,7 @@ def item(request, item_id):
         elif request.POST['action'] == 'Unwatch':
             user.watching.remove(item)
 
-        # For bids sent
+        # Bidding
         elif request.POST['action'] == 'Bid':
             form_bid = NewBid(request.POST)
 
@@ -99,7 +99,7 @@ def item(request, item_id):
                     item.current_price = form_bid.cleaned_data['bid']
                     item.save()
         
-        # For comments sent
+        # Sending comments
         elif request.POST['action'] == 'Comment':
             form_comment = NewComment(request.POST)
 
@@ -111,7 +111,7 @@ def item(request, item_id):
                 new_comment.save()
 
         
-        # For closed listing
+        # Closing the listing
         elif request.POST['action'] == 'Close':
             item.closed = True
             item.save()

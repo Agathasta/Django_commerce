@@ -1,18 +1,18 @@
 {% extends "auctions/item.html" %}
 
 {% block status %}
-
+<div class="content item">
 {% if bid.user == user %}
-You won the bid!
-The {{ item.title }} is yours for {{ item.current_price }}.
+<p>You won the bid!
+The {{ item.title }} is yours for <strong>${{ item.current_price }}</strong>.
 Contact {{ item.user }}
+</p>
 {% endif %}
 
 {% if item.user == user %}
-You are selling to {{ bid.user }} for {{ item.current_price }}
+<p>You are selling to {{ bid.user }} for <strong>${{ item.current_price }}</strong></p>
 {% endif %}
 
-The bid is closed!!
-
-
+<h3>Comments</h3>
+</div>
 {% endblock %}
