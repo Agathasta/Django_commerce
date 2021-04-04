@@ -3,16 +3,18 @@
 {% block body %}
 <h2>Active Listings</h2>
 
-{% for listing in listings %}
-<div class="list short">
-    <ul>
-        <li class="li-title"><a href="{% url 'item' listing.id %}">{{ listing.title }}</a></li>
-        <li>{{ listing.description }}</li>
-        <li><strong>Price: ${{ listing.current_price }}</strong></li>
-        <li>Category: {{ listing.category }}</li>
-    </ul>
-    <img src="{{ listing.image_url }}">
-</div>
+<div class="content index">
+    {% for listing in listings %}
+    <div class="horizontal-flex list">
+        <ul>
+            <li class="li-title"><a href="{% url 'item' listing.id %}">{{ listing.title }}</a></li>
+            <li>{{ listing.description }}</li>
+            <li><strong>Price: ${{ listing.current_price }}</strong></li>
+            <li>Category: <a href="{% url 'category' listing.category.id %}">{{ listing.category }}</a></li>
+        </ul>
+        <img src="{{ listing.image_url }}">
+    </div>
 
-{% endfor %}
+    {% endfor %}
+</div>
 {% endblock %}

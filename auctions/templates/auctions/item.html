@@ -4,36 +4,29 @@
 <h2>{{ item.title }}</h2>
 
 {% block status %}
-<div class="list">
+<div class="content item">
+	<div class="horizontal-flex">
 
-	<div class="item-text">
-
-		<div>
+		<div class="vertical-flex">
 			<!-- Close the auction -->
 			{% if item.user == user %}
 
-			<div>
-				<h3>Ready to sell?</h3>
+			<h3>Ready to sell?</h3>
+			<div class="horizontal-flex">
 				<p>Current price: ${{ item.current_price }}</p>
-			</div>
-			<div>
 				<form method="post">
 					{% csrf_token %}
 					<input type="submit" name="action" value="Close">
 				</form>
 			</div>
 
+			<!-- OR watch the auction -->
 			{% else %}
-
-			<div>
-				<h3>Interested?</h3>
+			<h3>Interested?</h3>
+			<div class="horizontal-flex">
 				<p>Current price: ${{ item.current_price }}
 					{% if bid.user == user %} (your bid) {% endif %}
 				</p>
-			</div>
-
-			<!-- OR watch the auction -->
-			<div>
 				<form method="post">
 					{% csrf_token %}
 					{% if watching %}
@@ -43,64 +36,62 @@
 					{% endif %}
 				</form>
 			</div>
+
+			<!-- AND bid after validation -->
+			{% if messages %}
+			<div class="messages">
+				{% for message in messages %}
+				<div class="alert" role="alert">{{ message }}</div>
+				{% endfor %}
+			</div>
+			{% endif %}
+
+			<form method="post">
+				{% csrf_token %}
+				{{ form_bid }}
+				<input type="submit" name="action" value="Bid">
+			</form>
 			{% endif %}
 		</div>
+		<img src="{{ item.image_url }}" class="screen">
+	</div>
 
-		<!-- Bids with validation -->
-		{% if item.user != user %}
-		{% if messages %}
-		<div class="messages">
-			{% for message in messages %}
-			<div class="alert" role="alert">{{ message }}</div>
-			{% endfor %}
-		</div>
-		{% endif %}
-
-		<form method="post">
-			{% csrf_token %}
-			{{ form_bid }}
-			<input type="submit" name="action" value="Bid">
-		</form>
-
-		{% else %}
-		<p style="color: #fff"> .</p>
-		{% endif %}
+	<div>
 		<h3>More info</h3>
-		<p>Listed by {{ item.user }}</p>
+		<p>Listed by
+			{% if item.user == user %}you{% else %}<strong>{{ item.user }}</strong>{% endif %}</p>
 		<!-- List watchers -->
-		<p>Watched by</p>
 		<ul>
+			Watched by
 			{% for watcher in watchers %}
-			<li>{{ watcher }}</li>
+			<li class="bullet">{{ watcher }}</li>
 			{% empty %}
-			<li>be the first to watch this</li>
+			<li>be the first to watch this!</li>
 			{% endfor %}
 		</ul>
 	</div>
-	<img src="{{ item.image_url }}" class="screen">
+
+
+	<div class="comments">
+		<h3>Comments:</h3>
+		<!-- Add comment -->
+		<form method="post" class="horizontal-flex">
+			{% csrf_token %}
+			{{ form_comment }}
+			<input type="submit" name="action" value="Comment">
+		</form>
+		{% endblock %}
+
+		<!-- Display comments -->
+		<ul>
+			{% for comment in comments %}
+			<li class="{% if comment.user == user %}posted-you{% else %}posted-other{% endif %} bubble">
+				{{ comment.comment }}</li>
+			<li><small>{% if comment.user != user %}posted by {{ comment.user }}{% endif %}</small></li>
+			</li>
+			{% endfor %}
+		</ul>
+	</div>
 </div>
-
-<div class="comments">
-	<h3>Comments:</h3>
-	<!-- Add comment -->
-	<form method="post">
-		{% csrf_token %}
-		{{ form_comment }}
-		<input type="submit" name="action" value="Comment">
-	</form>
-	{% endblock %}
-
-	<!-- Display comments -->
-	<ul>
-		{% for comment in comments %}
-		<li>
-			<p class="{% if comment.user == user %}posted-you{% else %}posted-other{% endif %} bubble">{{ comment.comment }}
-			</p>
-			<small>{% if comment.user != user %}posted by {{ comment.user }}{% endif %}</small>
-		</li>
-		{% endfor %}
-	</ul>
-</div>
-
 
 {% endblock %}

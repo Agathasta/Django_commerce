@@ -1,7 +1,8 @@
 :root {
-    --text-color: rgb(30, 30, 30);
-    --link-color: rgb(118, 118, 118);
-    --light-gray: rgba(199, 198, 198);
+    --text-color: rgb(13, 13, 13);
+    --link-color: rgb(27, 51, 27);
+    --light-gray: rgb(198, 198, 198);
+    --link-hover: rgb(224, 150, 38);
     --shadow: 0 .1em .5em rgba(0,0,0,0.2);
     --header-font: "Helvetica Neue", sans-serif;
 }
@@ -14,6 +15,7 @@ html, body, div, form, fieldset, h1, h2, h3, h4, h5, h6, hr, input, nav, li, ol,
     margin: 0;
     padding: 0;
     color: var(--text-color);
+    line-height: 1.5em;
 }
 
 body {
@@ -29,26 +31,28 @@ h2, h3 {
     padding-bottom: 1rem;
 }
 
-p, input, select {
-    line-height: 2em;
-}
-
-input[type="submit"] {
-    border: 1px solid var(--light-gray);
-    border-radius: 1em;
-    width: 6em;
-    background-color: #fff;
-    font-family: var(--header-font);
-}
-input[type="submit"]:hover {
-    background-color: var(--light-gray);
-    cursor: pointer;
+form {
+    padding-bottom: 2em;
 }
 
 input, select {
     padding: 0 0.5em;
     font-size: 0.8rem;
     box-sizing: border-box ;
+}
+
+input[type="submit"] {
+    border: 1px solid var(--light-gray);
+    border-radius: 1em;
+    width: 6em;
+    height: 2em;
+    background-color: #fff;
+    font-family: var(--header-font); 
+    margin-left: 1em;
+}
+input[type="submit"]:hover {
+    background-color: var(--link-hover);
+    cursor: pointer;
 }
 
 /* Thanks to Henrik: https://stackoverflow.com/questions/1895476/how-do-i-style-a-select-dropdown-with-only-css */
@@ -59,28 +63,27 @@ select {
     background-image: linear-gradient(var(--link-color), var(--link-color)),
         linear-gradient(-135deg, transparent 50%, var(--light-gray) 50%),
         linear-gradient(-225deg, transparent 50%, var(--light-gray) 50%),
-        linear-gradient(var(--light-gray) 42%, var(--text-color) 42%);
+        linear-gradient(var(--light-gray) 42%, var(--link-color) 42%);
     background-repeat: no-repeat, no-repeat, no-repeat, no-repeat;
     background-size: 1px 100%, 20px 22px, 20px 22px, 20px 100%;
     background-position: right 20px center, right bottom, right bottom, right bottom;
-}
-
-form {
-    padding-bottom: 2em;
+    height: 2.1em;
 }
 
 li {
     list-style: none;
+    padding: 0.2em 0;
 }
 
 a {
     color: var(--link-color);
     text-decoration: none;
-    transition: all 0.3s linear;
+    transition: all 0.2s ease-out;
+    font-size: 1.1em;
 }
 
 a:hover {
-    color: var(--text-color);
+    color: var(--link-hover);
 }
 
 /* || LAYOUT */
@@ -103,13 +106,13 @@ nav {
 h1 {
     display: inline-block; /* to get both lines together */
     font-size: 2rem;
+    line-height: 1em;
 }
 
 h1 p {
     font-size: 0.9rem;
     color: var(--text-color);
     text-align: right;
-    line-height: 1em;
 }
 
 #nav-right {
@@ -123,7 +126,6 @@ h1 p {
 .dropdown {
     position: relative;
     display: inline-block;
-     /* to reach the dropdown */
 }
 
 .dropdown-content {
@@ -146,7 +148,7 @@ h1 p {
 }
 
 .dropdown-content a:hover {
-    color: #fff;
+    color: var(--link-hover);
 }
 
 .dropdown:hover .dropdown-content {
@@ -163,7 +165,7 @@ nav a {
 
 main {
     padding-top: 8rem; /* cause the fixed nav */
-    /* max-width: 65rem; */
+    min-width: 40vw;
 }
 
 #footer {
@@ -171,6 +173,7 @@ main {
     background: var(--text-color);
     display: flex;
     justify-content: space-between;
+    margin-top: 2em;
 }
 
 #footer div {
@@ -181,77 +184,67 @@ main {
 }
 
 /* || PAGES  */
+.content {
+    padding: 0 1em;
+}
 
-.list {
+.horizontal-flex {
     display: flex;
     justify-content: space-between;
-    align-items:flex-start;
-    padding: 1rem;
-    border-bottom: 0.5px solid var(--text-color);
+    align-items: flex-start;
 }
 
-.short {
-    max-height: 25vh;
-}
-.list li  {
-    padding: 0.5em 0;
-}
-
-.item-text li,
-.category li {
-    list-style: inside;
-    padding: 0.5em 0;
-}
-
-.category li {
-    display: flex;
-    justify-content: space-between;
-    min-width: 40vw;
-}
-
-.category ul {
-    border-bottom: 0.5px solid var(--text-color);
-}
-
-img {
-    max-width: 40vw;
-    max-height: 25vh;
-}
-
-.cat-h3, .portfolio h3 {
-    padding-top: 1.5em;
-}
-
-.list ul li a, .portfolio ul li a {
-    font-size: 1.3rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    padding-right: 1em;
-}
-.item-text, .comments {
+.vertical-flex {
     display: flex;
     flex-direction: column;
     align-items: space-between;
 }
 
-.item-text > div, .comments > form {
-    display: flex;
-    align-items: center;
+img {
+    max-width: 40vw;
+    max-height: 25vh;
+    margin-left: 1em;
 }
-.item-text > div, .comments > form {
-    justify-content: space-between;
+
+.list {
+    max-height: 25vh;
+    border-bottom: 0.5px solid var(--text-color);
+    padding: 1em 0;
 }
-.comments > form > [type="text"],
-.item-text > form > [type="number"] {
+
+.li-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    padding-right: 1em;
+}
+
+.bullet {
+    list-style: inside;
+}
+
+.item h3,
+.portfolio h3 {
+    padding-top: 1.5em;
+}
+
+.item p {
+    padding-bottom: 2em;
+}
+
+.messages {
+    background-color: rgba(255, 0, 0, 0.5);
+    padding: 0.5em 1em;
+    margin-bottom: 1em;
+    border-radius: 3px;
+}
+
+.item [type="text"],
+.item [type="number"] {
     flex-grow: 1;
     margin: 0 1em;
 }
-.comments {
-    padding: 1rem;
-}
-.comments p {
-    line-height: 1.5em;
-}
+
 /* Thanks to Rik Schennink: https://codepen.io/rikschennink/pen/mjywQb */
 .bubble {
 	/* layout */
@@ -265,7 +258,6 @@ img {
 	border-radius: 2rem;
     box-shadow:	0 0.125rem 0.5rem rgba(0, 0, 0, .3), 0 0.0625rem 0.125rem rgba(0, 0, 0, .2);
 }
-
 .bubble::before {
 	/* layout */
 	content: '';
@@ -276,7 +268,6 @@ img {
 	border: .65rem solid transparent;
 	border-top: none;
 }
-
 .posted-you {
     text-align: right;
     left: 100%;
@@ -284,16 +275,13 @@ img {
     background-color: var(--text-color);
     color: var(--light-gray);
 }
-
 .posted-you::before {
     border-bottom-color: var(--text-color);
     right: 2em; /* offset should move with padding of parent */
 }
-
 .posted-other {
     background-color: var(--light-gray);
 }
-
 .posted-other::before {
     border-bottom-color: var(--light-gray);
     left: 2em; /* offset should move with padding of parent */
@@ -302,22 +290,25 @@ img {
     padding-left: 1.5em;
 }
 
-.vertical-form, .portfolio {
-    display: inline-flex;
+.vertical-form, 
+.portfolio {
+    display: flex;
     flex-direction: column;
 }
 
-.vertical-form div, .portfolio li {
+.vertical-form div, 
+.portfolio li {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-left: 1em;
+}
+.vertical-form div {
     margin-bottom: 1em;
 }
 
 .vertical-form div input,
 .vertical-form div select {
-    min-width: 35vw;
+    min-width: 40vw;
     margin-left: 2em;
 }
 
@@ -328,7 +319,7 @@ img {
 
 
 @media(min-width: 1300px) {
-    .list, .vertical-form {
+    .horizontal-flex, .vertical-form {
         width: 50vw;
     }
 }
@@ -339,16 +330,16 @@ img {
     h1 {
         font-size: 1.7rem;
     }
-    .list ul li a {
+    .horizontal-flex ul li a {
         font-size: 1.2rem;
     }
-    h2, ul, .cat-h3 {
+    h2, ul {
         padding-left: 1rem;
     }
     #nav-right, #nav-left {
         padding: 0 .4rem;
     }
-    .list form input {
+    .horizontal-flex form input {
         width: 6em;
         margin: 0.3em;
     }
@@ -365,7 +356,7 @@ img {
     h1 {
         font-size: 1.4em;
     }
-    .list ul li a {
+    .horizontal-flex ul li a {
         font-size: 1em;
     }
     h2 {

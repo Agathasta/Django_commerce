@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
-from django.db.models import Max
+from django.db.models import Max, Count
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
@@ -16,12 +16,18 @@ from .models import Bid, Category, Comment, Listing, User
 
 def index(request):
     return render(request, 'auctions/index.html', {
-        'listings': Listing.objects.exclude(closed=True).all(),
+        'listings': Listing.objects.exclude(closed=True).order_by('title').all(),
     })
 
 def categories(request):
     return render(request, 'auctions/categories.html', {
         'categories': Category.objects.all().order_by('id'),
+    })
+
+def category(request, category_id):
+    return render(request, 'auctions/category.html', {
+        'listings': Listing.objects.filter(category_id=category_id).exclude(closed=True).all(),
+        'category': Category.objects.filter(id=category_id).first()
     })
 
 @login_required(login_url='/login')

@@ -3,16 +3,18 @@
 {% block body %}
 
 <h2>Welcome {{ user }}</h2>
-<div class="portfolio">
+<div class="content portfolio">
   <h3>Bids you won</h3>
   <ul>
     {% for bid in bids %}
     {% if bid.winning_bid %}
     <li>
-      <a href="{% url 'item' bid.listing.id %}">{{bid.listing.title}}</a>
+      <a class="li-title" href="{% url 'item' bid.listing.id %}">{{bid.listing.title}}</a>
       {{bid.bid}} EUR
     </li>
     {% endif %}
+    {% empty %}
+    No bids won
     {% endfor %}
   </ul>
 
@@ -21,8 +23,8 @@
     {% for bid in bids %}
     {% if not bid.listing.closed %}
     <li>
-      <a href="{% url 'item' bid.listing.id %}">{{bid.listing.title}}</a>
-      Your bid: {{bid.bid}} EUR |
+      <a class="li-title" href="{% url 'item' bid.listing.id %}">{{bid.listing.title}}</a>
+      Your bid: ${{bid.bid}} |
       {% if bid.bid != bid.listing.current_price %}
       Current price: {{ bid.listing.current_price }}
       {% else %}
@@ -30,6 +32,8 @@
       {% endif %}
     </li>
     {% endif %}
+    {% empty %}
+    <p>You are not bidding right now</p>
     {% endfor %}
   </ul>
 
@@ -37,10 +41,12 @@
   <ul>
     {% for listing in watching %}
     {% if not listing.closed %}
-    <li><a href="{% url 'item' listing.id %}">{{ listing.title }}</a>
-      Current price: {{ listing.current_price }} EUR
+    <li><a class="li-title" href="{% url 'item' listing.id %}">{{ listing.title }}</a>
+      Current price: ${{ listing.current_price }}
     </li>
     {% endif %}
+    {% empty %}
+    <p>You are not watching anything right now</p>
     {% endfor %}
   </ul>
 
@@ -48,10 +54,12 @@
   <ul>
     {% for listing in listings %}
     <li>
-      <a href="{% url 'item' listing.id %}">{{ listing.title }}</a>
+      <a class="li-title" href="{% url 'item' listing.id %}">{{ listing.title }}</a>
       {% if listing.closed %} Sold for: {% else %} Current price: {% endif %}
-      {{ listing.current_price }} EUR
+      ${{ listing.current_price }}
     </li>
+    {% empty %}
+    <p>You are not selling anything</p>
     {% endfor %}
   </ul>
 </div>

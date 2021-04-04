@@ -10,7 +10,7 @@ class NewListing(forms.Form):
   image_url = forms.URLField(label="Image URL", max_length=200, required=False)
 
 class NewBid(forms.Form):
-  bid = forms.DecimalField(label="Make your bid!", max_digits=7, decimal_places=2, required=False)
+  bid = forms.DecimalField(label="Your bid", max_digits=7, decimal_places=2, required=False)
 
 class NewComment(forms.Form):
   comment = forms.CharField(max_length=550, required=False)

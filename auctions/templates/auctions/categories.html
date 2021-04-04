@@ -2,20 +2,19 @@
 
 {% block body %}
 <h2>Categories</h2>
+<div class="content">
+  {% for category in categories %}
 
-{% for category in categories %}
-<div class="category">
-  <h3 class="cat-h3">{{ category }}</h3>
+  {% if category.listings.all|length > 0 %}
+  <div class="horizontal-flex list">
+    <h3><a href="{% url 'category' category.id %}">{{ category }}</a></h3>
+  </div>
+  {% else %}
+  <div class="list short">
+    <h3>{{ category }}</h3>
+  </div>
+  {% endif %}
 
-  <ul>
-    {% for listing in category.listings.all %}
-    {% if not listing.closed %}
-    <li><a href="{% url 'item' listing.id %}">{{ listing.title }}</a> ${{ listing.current_price }}</li>
-    {% endif %}
-    {% empty %}
-    <li>No active listings</li>
-    {% endfor %}
-  </ul>
+  {% endfor %}
 </div>
-{% endfor %}
 {% endblock %}

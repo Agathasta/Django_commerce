@@ -13,7 +13,7 @@ class Bid(models.Model):
     winning_bid = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"Bid of {self.bid}€ on {self.listing.title} by {self.user}"
+        return f"Bid of ${self.bid} on {self.listing.title} by {self.user}"
 
 
 class Category(models.Model):
@@ -27,6 +27,9 @@ class Comment(models.Model):
     listing = models.ForeignKey('Listing', on_delete=models.CASCADE, related_name='comments')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments')
     comment = models.TextField()
+
+    def __str__(self):
+        return f"{self.user} comment about {self.listing.title}: {self.comment}"
 
 
 class Listing(models.Model):
@@ -46,4 +49,4 @@ class Listing(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.title}: listed by {self.user}, current price is {self.current_price}"
+        return self.title
