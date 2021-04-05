@@ -153,7 +153,6 @@ h1 p {
 }
 
 .dropdown:hover .dropdown-content {
-    /* display: block; */
     visibility: visible;
     opacity: 1;
     transition: opacity 0.4s linear;
@@ -358,6 +357,10 @@ img {
     }
     h1 {
         font-size: 1.4em;
+    }
+    .li-title {
+        line-height: 1rem;
+        font-size: 0.9rem !important;
     }
     .horizontal-flex ul li a {
         font-size: 1em;
