@@ -80,7 +80,7 @@ def item(request, item_id):
 
             if form_bid.is_valid():
                 if form_bid.cleaned_data['bid'] <= item.current_price:
-                    messages.error(request, f"Your bid needs to be at least {item.current_price} high.")
+                    messages.error(request, f"Your bid needs to be higher than ${item.current_price}!")
                     return render(request, 'auctions/item.html', {
                         'item': item,
                         'bid': bid,
